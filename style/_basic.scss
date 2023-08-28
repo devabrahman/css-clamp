@@ -1,0 +1,37 @@
+body {
+  background-color: rgb(1, 19, 13);
+  color: #fff;
+}
+
+// ===============================================
+@function convertToRem($px) {
+  $val: calc($px / 16);
+  @return $val;
+}
+@function clampCal($minSize, $maxSize, $minWidth, $maxWidth) {
+  $minREMsize: convertToRem($minSize);
+  $maxREMsize: convertToRem($maxSize);
+  $minREMwidth: convertToRem($minWidth);
+  $maxREMwidth: convertToRem($maxWidth);
+
+  $slopFontCal: calc($maxREMsize - $minREMsize);
+  $slopWidthCal: calc($maxREMwidth - $minREMwidth);
+
+  $slop: calc($slopFontCal / $slopWidthCal);
+  // slop done;
+
+  $minusWidth: calc($minREMwidth * -1);
+  $yAxisIntersection: calc($minusWidth * $slop + $minREMsize);
+
+  $preferred: calc($slop * 100);
+
+  @return clamp(
+    #{$minREMsize}rem,
+    #{$yAxisIntersection}rem + #{$preferred}vw,
+    #{$maxREMsize}rem
+  );
+}
+
+h1 {
+  font-size: clampCal(32, 40, 1000, 1400);
+}
