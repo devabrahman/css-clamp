@@ -8,7 +8,10 @@ body {
   $val: calc($px / 16);
   @return $val;
 }
-@function clampCal($minSize, $maxSize, $minWidth, $maxWidth) {
+@function formatFloatingNumber($number) {
+  @return round($number * 10000) / 10000;
+}
+@function clampCal($minSize, $maxSize, $minWidth: 375, $maxWidth: 1199) {
   $minREMsize: convertToRem($minSize);
   $maxREMsize: convertToRem($maxSize);
   $minREMwidth: convertToRem($minWidth);
@@ -21,17 +24,19 @@ body {
   // slop done;
 
   $minusWidth: calc($minREMwidth * -1);
-  $yAxisIntersection: calc($minusWidth * $slop + $minREMsize);
-
+  $xAxisIntersection: calc($minusWidth * $slop + $minREMsize);
   $preferred: calc($slop * 100);
+
+  $xAxisMax: formatFloatingNumber($xAxisIntersection);
+  $preferredMax: formatFloatingNumber($preferred);
 
   @return clamp(
     #{$minREMsize}rem,
-    #{$yAxisIntersection}rem + #{$preferred}vw,
+    #{$xAxisMax}rem + #{$preferredMax}vw,
     #{$maxREMsize}rem
   );
 }
 
 h1 {
-  font-size: clampCal(32, 40, 1000, 1400);
+  font-size: clampCal(32, 100);
 }
